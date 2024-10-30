@@ -1,0 +1,368 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>capturar domicilio geográfico</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">capturar domicilio geográfico</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <form [formGroup]="formularioCapturar" (ngSubmit)="submitForm()">
+    <ion-grid fixed>
+      <ion-row class="row-principales">
+        <ion-col size="12" class="col-principales">Principales</ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('E')" (mouseleave)="hideTooltip('E')"></ion-icon>
+              @if(isTooltipVisibleEntidad) {
+                <div class="tooltip">
+                  Sustantivo propio que identifica a la Entidad Federativa o a la Ciudad de México.
+                </div>
+              }
+            </div>
+            <ion-select label="Entidad" label-placement="floating" fill="outline" formControlName="cve_ent" placeholder="Entidad"
+            (ionChange)="getMunicipios()">
+              @for (entidad of entidades; track $index) {
+                <ion-select-option [value]="entidad.cve_ent">{{entidad.nomgeo}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('M')" (mouseleave)="hideTooltip('M')"></ion-icon>
+              @if(isTooltipVisibleMunicipio) {
+                <div class="tooltip">
+                  Sustantivo propio que identifica al Municipio o, en el caso de Ciudad de México, a las Demarcaciones Territoriales.
+                </div>
+              }
+            </div>
+            <ion-select label="Municipio" label-placement="floating" fill="outline" formControlName="cve_mun" placeholder="Municipio"
+            (ionChange)="getLocalidades()">
+              @for (municipio of municipios; track $index) {
+                <ion-select-option [value]="municipio.cve_mun">{{municipio.nomgeo}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('L')" (mouseleave)="hideTooltip('L')"></ion-icon>
+              @if(isTooltipVisibleLocalidad) {
+                <div class="tooltip">
+                  Sustantivo propio que identifica a la Localidad.
+                </div>
+              }
+            </div>
+            <ion-select label="Localidad" label-placement="floating" fill="outline" formControlName="cve_loc" placeholder="Localidad"
+            (ionChange)="getTiposVialidades()">
+              @for (localidad of localidades; track $index) {
+                <ion-select-option [value]="localidad.cve_loc" [ngClass]="{'italic-text': localidad.ambito === 'Rural'}"
+                >{{localidad.nomgeo}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 34px;">
+            </div>
+            <ion-input label="Buscar nombre de la vialidad" label-placement="floating" fill="outline" formControlName="buscar_nombre_vialidad" placeholder="Buscar nombre de la vialidad"
+            (ionInput)="getBuscarNombreVialidad($event)" maxlength="255" class="buscar">
+            </ion-input>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('TV')" (mouseleave)="hideTooltip('TV')"></ion-icon>
+              @if(isTooltipVisibleTipoVialidad) {
+                <div class="tooltip">
+                  Se refiere a la clasificación que se le da a la vialidad, en función del tránsito vehicular y/o peatonal.
+                </div>
+              }
+            </div>
+            <ion-select label="Tipo de vialidad" label-placement="floating" fill="outline" formControlName="cve_tipo_vialidad" placeholder="Tipo de vialidad"
+            (ionChange)="getNombresVialidades()">
+              @for (tipovialidad of tiposVialidades; track $index) {
+                <ion-select-option [value]="tipovialidad.cve_tipovial">{{tipovialidad.descripcion}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('NV')" (mouseleave)="hideTooltip('NV')"></ion-icon>
+              @if(isTooltipVisibleNombreVialidad) {
+                <div class="tooltip">
+                  Sustantivo propio que identifica a la vialidad.
+                </div>
+              }
+            </div>
+            <ion-select label="Nombre de la vialidad" label-placement="floating" fill="outline" formControlName="cve_nombre_vialidad" placeholder="Nombre de la vialidad"
+            (ionChange)="numeroExteriorEInterior()">
+              @for (nombrevialidad of nombresVialidades; track $index) {
+                <ion-select-option [value]="nombrevialidad.cvevial">{{nombrevialidad.nomvial}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('NE')" (mouseleave)="hideTooltip('NE')"></ion-icon>
+              @if(isTooltipVisibleNumeroExterior) {
+                <div class="tooltip">
+                  Caracteres alfanuméricos y símbolos que identifican un predio o inmueble en una vialidad.
+                </div>
+              }
+            </div>
+            <ion-input label="Número exterior" label-placement="floating" fill="outline" formControlName="numero_exterior"
+            maxlength="50"
+            errorText="Número exterior no válido"></ion-input>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('NI')" (mouseleave)="hideTooltip('NI')"></ion-icon>
+              @if(isTooltipVisibleNumeroInterior) {
+                <div class="tooltip">
+                  Caracteres alfanuméricos y símbolos que identifican una vivienda o establecimiento al interior de un predio o inmueble, con número exterior designado.
+                </div>
+              }
+            </div>
+            <ion-input label="Número interior" label-placement="floating" fill="outline" formControlName="numero_interior"
+            maxlength="50"
+            errorText="Número interior no válido"></ion-input>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 34px;">
+            </div>
+            <ion-input label="Buscar nombre de asentamiento" label-placement="floating" fill="outline" formControlName="buscar_nombre_asentamiento" placeholder="Buscar nombre de asentamiento"
+            (ionInput)="getBuscarNombreAsentamiento($event)" maxlength="255" class="buscar">
+            </ion-input>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('TA')" (mouseleave)="hideTooltip('TA')"></ion-icon>
+              @if(isTooltipVisibleTipoAsentamiento) {
+                <div class="tooltip">
+                  Se refiere a la clasificación que se le da al asentamiento humano, en función de sus características.
+                </div>
+              }
+            </div>
+            <ion-select label="Tipo de asentamiento" label-placement="floating" fill="outline" formControlName="cve_tipo_asentamiento" placeholder="Tipo de asentamiento"
+            (ionChange)="getNombresAsentamientos()">
+              @for (tipoasentamiento of tiposAsentamientos; track $index) {
+                <ion-select-option [value]="tipoasentamiento.cve_tipoasen">{{tipoasentamiento.descripcion}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('NA')" (mouseleave)="hideTooltip('NA')"></ion-icon>
+              @if(isTooltipVisibleNombreAsentamiento) {
+                <div class="tooltip">
+                  Sustantivo propio que identifica al asentamiento humano.
+                </div>
+              }
+            </div>
+            <ion-select label="Nombre del asentamiento" label-placement="floating" fill="outline" formControlName="cve_nombre_asentamiento" placeholder="Nombre del asentamiento"
+            (ionChange)="codigoPostal()">
+              @for (nombreasentamiento of nombresAsentamientos; track $index) {
+                <ion-select-option [value]="nombreasentamiento.cve_asen">{{nombreasentamiento.nom_asen}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('CP')" (mouseleave)="hideTooltip('CP')"></ion-icon>
+              @if(isTooltipVisibleCodigoPostal) {
+                <div class="tooltip">
+                  Clave numérica compuesta por cinco dígitos, asignada por el Servicio Postal Mexicano, que identifica y ubica un área geográfica del país y la oficina postal que la sirve, para facilitar al correo, el encaminamiento, la distribución y el reparto de la materia postal.
+                </div>
+              }
+            </div>
+            <ion-input label="Código postal" label-placement="floating" fill="outline" formControlName="codigo_postal" placeholder="Código postal (ausencia de dato->00000)"
+            maxlength="5"
+            errorText="Código postal no válido"></ion-input>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row class="row-complementarios">
+        <ion-col size="12" class="col-complementarios">Complementarios</ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 34px;">
+            </div>
+            <ion-input label="Buscar nombre de la vialidad de referencia 1" label-placement="floating" fill="outline" formControlName="buscar_nombre_vialidad_referencia1" placeholder="Buscar nombre de la vialidad de referencia 1"
+            (ionInput)="getBuscarNombreVialidadReferencia1($event)" maxlength="255" class="buscar">
+            </ion-input>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('TVR1')" (mouseleave)="hideTooltip('TVR1')"></ion-icon>
+              @if(isTooltipVisibleTipoVialidadReferencia1) {
+                <div class="tooltip">
+                  Hace referencia al tipo y nombre de las vialidades entre las cuales se ubica un Domicilio Geográfico de interés, están definidas por las vialidades perpendiculares a la vialidad sobre la que se encuentra el frente de manzana en donde se ubica el acceso principal del predio o inmueble.
+                </div>
+              }
+            </div>
+            <ion-select label="Tipo de vialidad de referencia 1" label-placement="floating" fill="outline" formControlName="cve_tipo_vialidad_referencia1" placeholder="Tipo de vialidad de referencia 1"
+            (ionChange)="getNombresVialidadesReferencia1()">
+              @for (tipovialidadreferencia1 of tiposVialidadesReferencia1; track $index) {
+                <ion-select-option [value]="tipovialidadreferencia1.cve_tipovial">{{tipovialidadreferencia1.descripcion}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('NVR1')" (mouseleave)="hideTooltip('NVR1')"></ion-icon>
+              @if(isTooltipVisibleNombreVialidadReferencia1) {
+                <div class="tooltip">
+                  ...
+                </div>
+              }
+            </div>
+            <ion-select label="Nombre de la vialidad de referencia 1" label-placement="floating" fill="outline" formControlName="cve_nombre_vialidad_referencia1" placeholder="Nombre de la vialidad de referencia 1"
+            (ionChange)="getTiposVialidadesReferencia2()">
+              @for (nombrevialidadreferencia1 of nombresVialidadesReferencia1; track $index) {
+                <ion-select-option [value]="nombrevialidadreferencia1.cvevial">{{nombrevialidadreferencia1.nomvial}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 34px;">
+            </div>
+            <ion-input label="Buscar nombre de la vialidad de referencia 2" label-placement="floating" fill="outline" formControlName="buscar_nombre_vialidad_referencia2" placeholder="Buscar nombre de la vialidad de referencia 2"
+            (ionInput)="getBuscarNombreVialidadReferencia2($event)" maxlength="255" class="buscar">
+            </ion-input>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('TVR2')" (mouseleave)="hideTooltip('TVR2')"></ion-icon>
+              @if(isTooltipVisibleTipoVialidadReferencia2) {
+                <div class="tooltip">
+                  Hace referencia al tipo y nombre de las vialidades entre las cuales se ubica un Domicilio Geográfico de interés, están definidas por las vialidades perpendiculares a la vialidad sobre la que se encuentra el frente de manzana en donde se ubica el acceso principal del predio o inmueble.
+                </div>
+              }
+            </div>
+            <ion-select label="Tipo de vialidad de referencia 2" label-placement="floating" fill="outline" formControlName="cve_tipo_vialidad_referencia2" placeholder="Tipo de vialidad de referencia 2"
+            (ionChange)="getNombresVialidadesReferencia2()">
+              @for (tipovialidadreferencia2 of tiposVialidadesReferencia2; track $index) {
+                <ion-select-option [value]="tipovialidadreferencia2.cve_tipovial">{{tipovialidadreferencia2.descripcion}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('NVR2')" (mouseleave)="hideTooltip('NVR2')"></ion-icon>
+              @if(isTooltipVisibleNombreVialidadReferencia2) {
+                <div class="tooltip">
+                  ...
+                </div>
+              }
+            </div>
+            <ion-select label="Nombre de la vialidad de referencia 2" label-placement="floating" fill="outline" formControlName="cve_nombre_vialidad_referencia2" placeholder="Nombre de la vialidad de referencia 2"
+            (ionChange)="getTiposVialidadesPosterior()">
+              @for (nombrevialidadreferencia2 of nombresVialidadesReferencia2; track $index) {
+                <ion-select-option [value]="nombrevialidadreferencia2.cvevial">{{nombrevialidadreferencia2.nomvial}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 34px;">
+            </div>
+            <ion-input label="Buscar nombre de la vialidad posterior" label-placement="floating" fill="outline" formControlName="buscar_nombre_vialidad_posterior" placeholder="Buscar nombre de la vialidad posterior"
+            (ionInput)="getBuscarNombreVialidadPosterior($event)" maxlength="255" class="buscar">
+            </ion-input>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('TVP')" (mouseleave)="hideTooltip('TVP')"></ion-icon>
+              @if(isTooltipVisibleTipoVialidadPosterior) {
+                <div class="tooltip">
+                  Hace referencia al tipo y nombre de la vialidad que se encuentra en la parte posterior de la Vialidad donde se ubica el Domicilio Geográfico de Interés.
+                </div>
+              }
+            </div>
+            <ion-select label="Tipo de vialidad de posterior" label-placement="floating" fill="outline" formControlName="cve_tipo_vialidad_posterior" placeholder="Tipo de vialidad posterior"
+            (ionChange)="getNombresVialidadesPosterior()">
+              @for (tipovialidadposterior of tiposVialidadesPosterior; track $index) {
+                <ion-select-option [value]="tipovialidadposterior.cve_tipovial">{{tipovialidadposterior.descripcion}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('NVP')" (mouseleave)="hideTooltip('NVP')"></ion-icon>
+              @if(isTooltipVisibleNombreVialidadPosterior) {
+                <div class="tooltip">
+                  ...
+                </div>
+              }
+            </div>
+            <ion-select label="Nombre de la vialidad posterior" label-placement="floating" fill="outline" formControlName="cve_nombre_vialidad_posterior" placeholder="Nombre de la vialidad posterior"
+            (ionChange)="descripcionUbicacion()">
+              @for (nombrevialidadposterior of nombresVialidadesPosterior; track $index) {
+                <ion-select-option [value]="nombrevialidadposterior.cvevial">{{nombrevialidadposterior.nomvial}}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div style="display: flex; align-items: center;">
+            <div style="position: relative; display: inline-block; margin-right: 10px;">
+              <ion-icon name="information-circle-outline" (mouseenter)="showTooltip('DU')" (mouseleave)="hideTooltip('DU')"></ion-icon>
+              @if(isTooltipVisibleDescripcionUbicacion) {
+                <div class="tooltip">
+                  Se refiere a rasgos naturales o culturales (edificaciones) que aportan información del Domicilio Geográfico referido a un predio o inmueble, mismos que son fácilmente identificables, esto es fundamental en vialidades donde se carece de nombre y número exterior, en carreteras, caminos, terracerías, brechas, veredas, arroyos, ríos, canales, línea de costa continentales e insulares, localidades rurales de difícil acceso, elementos del territorio insular, información de domicilios derivada del crecimiento de una zona urbana y domicilios conocidos.
+                </div>
+              }
+            </div>
+            <ion-textarea label="Descripción de ubicación" label-placement="floating" fill="outline" formControlName="descripcion_ubicacion"
+            placeholder="Descripción de ubicación" [autoGrow]="true" spellcheck="true" lang="es"
+            errorText="Descripción de ubicación no válida" style="height: 10.0rem"></ion-textarea>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row style="padding-top:4.0rem;">
+        <ion-col size="12">
+          <ion-button type="submit" expand="block">Guardar</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

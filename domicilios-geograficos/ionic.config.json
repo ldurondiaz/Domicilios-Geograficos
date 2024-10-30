@@ -1,0 +1,7 @@
+{
+  "name": "domicilios-geograficos",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

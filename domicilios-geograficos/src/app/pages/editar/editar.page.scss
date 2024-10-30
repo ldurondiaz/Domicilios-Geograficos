@@ -1,0 +1,84 @@
+::ng-deep .italic-text {
+  font-style: italic;
+}
+
+ion-chip {
+  width: 100%;
+  display: flex;
+  background:#888;
+  color: #fff;
+  border: 1px solid #fff;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight:bold;
+}
+
+ion-card, ion-card-content {
+  margin-inline-start: 1px;
+  margin-inline-end: 1px;
+  padding-inline-start: 1px;
+  padding-inline-end: 1px;
+  text-align: justify;
+}
+
+ion-accordion.accordion-expanding,
+ion-accordion.accordion-expanded {
+//  width: calc(100% - 32px);
+//  margin: 16px auto;
+  width: calc(100% - 0.00rem);
+  margin: 0.00rem auto;
+}
+
+ion-accordion.accordion-collapsing ion-item[slot='header'],
+ion-accordion.accordion-collapsed ion-item[slot='header'] {
+  --background: #eee;
+  --color: #fff;
+  ion-label {
+      color: #fff;
+      font-weight: bold;
+  }
+}
+
+ion-accordion.accordion-expanding ion-item[slot='header'],
+ion-accordion.accordion-expanded ion-item[slot='header'] {
+  --background: #888;
+  --color: #fff;
+  ion-label {
+      color: #fff;
+      font-weight: bold;
+  }
+}
+
+.pagina {
+  margin-left: 1.00rem;
+  margin-right: 1.00rem;
+  font-size: 0.75rem;
+}
+
+.titulo {
+  width: 100%;
+  background-color: #ddd;
+  font-size: 1.00rem;
+  font-weight: bold;
+}
+
+.grid-principal {
+  padding-top: 2.00rem;
+  text-align: center;
+}
+
+p {
+  display: inline;
+  padding: 0.50rem;
+}
+
+.botones {
+  padding: 2.00rem 0.50rem 0.50rem 0.50rem;
+  ion-col {
+    background: #ccc;
+    ion-button {
+      --background: #ddd;
+      color: #000;
+    }
+  }
+}

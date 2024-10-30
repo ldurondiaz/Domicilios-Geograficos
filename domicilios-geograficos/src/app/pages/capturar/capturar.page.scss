@@ -1,0 +1,52 @@
+::ng-deep .italic-text {
+    //font-weight: bold;
+    font-style: italic;
+}
+
+ion-select {
+    --background: #fcfcfc;
+}
+
+.buscar {
+    --background:#ededed;
+}
+
+ion-input {
+    --background: #fcfcfc;
+}
+
+.row-principales {
+    background-color: #bbb;
+}
+
+.row-complementarios {
+    background-color: #eee;
+}
+
+.col-principales, .col-complementarios {
+    padding:2.0rem;
+    font-weight: bold;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  text-align: justify;
+  border-radius: 4px;
+  padding: 10px;
+  top: -30px;
+  left: 20px;
+  z-index: 11;
+  width: 15.00rem;
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+ion-icon {
+  width: 1.50rem;
+  height: 1.50rem;
+  font-size: 1.50rem;
+  color:#888;
+  cursor: pointer;
+}
